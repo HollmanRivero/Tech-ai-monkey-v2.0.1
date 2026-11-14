@@ -1,0 +1,203 @@
+import Link from "next/link";
+import { auth } from "@/auth";
+import { siteConfig } from "@/lib/site";
+import SignOutButton from "@/components/sign-out-button";
+
+const FEATURES = [
+  { title: "Searches the whole web", body: "Keeps searching and fetching sources until your issue is actually resolved." },
+  { title: "Keeps learning", body: "Remembers your preferences and projects between conversations." },
+  { title: "A library of skills", body: "Loads reusable procedures on demand instead of guessing." },
+  { title: "Chat history control", body: "Clear or delete your conversations whenever you want." },
+  { title: "API keys", body: "Give your own server a key and hook the AI into your systems." },
+  { title: "Notebook reminders", body: "Reminders that stay until you mark them done." },
+  { title: "App connections", body: "Slack, Google Workspace, and Google — always with your permission." },
+  { title: "Fair pricing", body: "Pay only for what you use. Cheaper than the big AI subscriptions." },
+];
+
+const PLANS = [
+  { name: "Free", price: "€0", tokens: "80,000 tokens / 5 days" },
+  { name: "PRO", price: "€40", tokens: "250,000 tokens / 30 days" },
+  { name: "Ultra", price: "€75", tokens: "800,000 tokens / 30 days" },
+  { name: "Bomb", price: "€105", tokens: "1,200,000 tokens / 30 days" },
+];
+
+export default async function HomePage() {
+  const session = await auth();
+  return (
+    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+      <header className="flex items-center justify-between border-b border-zinc-800 px-6 py-4">
+        <div>
+          <span className="font-semibold">{siteConfig.name}</span>
+          <span className="ml-2 text-xs text-zinc-500">v{siteConfig.version}</span>
+        </div>
+        <nav className="flex items-center gap-4 text-sm">
+          <Link href="/pricing" className="text-zinc-400 hover:text-white">Pricing</Link>
+          <Link href="/privacy" className="text-zinc-400 hover:text-white">Privacy</Link>
+          <Link href="/terms" className="text-zinc-400 hover:text-white">Terms</Link>
+          <Link href="/download" className="text-zinc-400 hover:text-white">Download app</Link>
+          <Link href="/copyright" className="text-zinc-400 hover:text-white">Legal</Link>
+          {session?.user ? (
+            <>
+              <Link href="/dashboard" className="rounded-lg bg-blue-600 px-3 py-1.5 font-medium hover:bg-blue-500">
+                Dashboard
+              </Link>
+              <SignOutButton className="rounded-lg border border-zinc-700 px-3 py-1.5 hover:bg-zinc-900" />
+            </>
+          ) : (
+            <>
+              <Link href="/signin" className="rounded-lg border border-zinc-700 px-3 py-1.5 hover:bg-zinc-900">Sign in</Link>
+              <Link href="/signup" className="rounded-lg bg-blue-600 px-3 py-1.5 font-medium hover:bg-blue-500">Get started</Link>
+            </>
+          )}
+        </nav>
+      </header>
+
+      <main>
+        {/* Model banner — shows the active AI model (Ollama self-hosted). */}
+        <div className="border-b border-zinc-800 bg-gradient-to-r from-emerald-950/50 via-zinc-950 to-zinc-950">
+          <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-6 py-3 text-sm">
+            <span className="rounded-full border border-emerald-500/40 bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300">
+              OLLAMA LOCAL ENGINE
+            </span>
+            <span className="font-semibold">{siteConfig.modelName} {siteConfig.modelVersion}</span>
+            <span className="text-zinc-400">
+              · 100% independent local Ollama brain (no OpenAI / DeepSeek dependency · automatic key rotation)
+            </span>
+            <Link href="/download" className="ml-auto text-xs font-medium text-emerald-400 hover:underline">
+              Download Ollama &amp; CLI →
+            </Link>
+          </div>
+        </div>
+
+        <section className="mx-auto max-w-4xl px-6 py-20 text-center">
+          <h1 className="text-4xl font-bold sm:text-5xl">{siteConfig.tagline}</h1>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-400">
+            {siteConfig.name} runs on its own independent <strong>Ollama</strong> brain, searches
+            the web until it finds the answer, learns from every conversation, and gives you API
+            access with continuous automatic key renewal — at a fair price.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            {session?.user ? (
+              <Link href="/dashboard" className="rounded-lg bg-blue-600 px-5 py-2.5 font-medium hover:bg-blue-500">
+                Open dashboard
+              </Link>
+            ) : (
+              <Link href="/signup" className="rounded-lg bg-blue-600 px-5 py-2.5 font-medium hover:bg-blue-500">
+                Get started free
+              </Link>
+            )}
+            <Link href="/download" className="rounded-lg border border-emerald-600/60 bg-emerald-950/30 px-5 py-2.5 text-emerald-200 hover:bg-emerald-900/40">
+              Download Ollama &amp; App
+            </Link>
+            <Link href="/pricing" className="rounded-lg border border-zinc-700 px-5 py-2.5 hover:bg-zinc-900">
+              View pricing
+            </Link>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-5xl px-6 py-12">
+          <div className="rounded-2xl border border-blue-900/30 bg-blue-950/10 p-8 sm:p-12">
+            <h2 className="text-2xl font-bold sm:text-3xl text-blue-100">Pro-Level Code Generation</h2>
+            <p className="mt-4 text-zinc-400 text-lg max-w-3xl">
+              Our AI doesn't just print code into a chat window. It comes equipped with an isolated, private virtual machine (Sandbox) for every conversation, giving you the best of both worlds:
+            </p>
+            
+            <div className="mt-8 grid gap-8 sm:grid-cols-2">
+              <div>
+                <div className="flex items-center gap-2 font-semibold text-blue-300">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-900/50 text-xs">1</span>
+                  Quick snippets in chat
+                </div>
+                <p className="mt-2 text-sm text-zinc-400">
+                  For simple questions or single files, the AI outputs clean code blocks directly in the chat. Every block has one-click <strong className="text-zinc-300">Copy</strong> and <strong className="text-zinc-300">Download</strong> buttons.
+                </p>
+              </div>
+              
+              <div>
+                <div className="flex items-center gap-2 font-semibold text-purple-300">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-900/50 text-xs">2</span>
+                  Massive projects in Artifacts
+                </div>
+                <p className="mt-2 text-sm text-zinc-400">
+                  When you ask for a complex, multi-file project (like a full website), the AI works quietly in its private sandbox to bypass chat limits. When it's done, it bundles the entire project and sends it to your <strong className="text-zinc-300">Dashboard → Artifacts</strong> page, ready for you to download in one click!
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-5xl px-6 py-12">
+          <div className="rounded-2xl border border-emerald-900/30 bg-emerald-950/10 p-8 sm:p-12">
+            <h2 className="text-2xl font-bold sm:text-3xl text-emerald-100">Guided Integrations & Skills</h2>
+            <p className="mt-4 text-zinc-400 text-lg max-w-3xl">
+              The AI comes pre-loaded with specialized skills to help you set up complex integrations safely. For example, simply ask it to <strong>"Connect my Google Calendar"</strong>, and it will patiently guide you through the 6-step OAuth setup without ever asking for your passwords or secrets:
+            </p>
+            
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { step: "1", title: "Create Cloud Project", desc: "Sets up your Google Cloud environment." },
+                { step: "2", title: "Enable API", desc: "Activates the Calendar API securely." },
+                { step: "3", title: "Consent Screen", desc: "Configures exactly what access your app needs." },
+                { step: "4", title: "Create Credentials", desc: "Generates your Client ID and safe secrets." },
+                { step: "5", title: "Connect to App", desc: "Links your new credentials to the integration." },
+                { step: "6", title: "Publish App", desc: "Optional step to bypass testing limits." }
+              ].map((s) => (
+                <div key={s.step} className="rounded-xl border border-zinc-800/50 bg-zinc-900/20 p-4">
+                  <div className="flex items-center gap-2 font-semibold text-emerald-300">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-900/50 text-xs">{s.step}</span>
+                    {s.title}
+                  </div>
+                  <p className="mt-2 text-sm text-zinc-400">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-5xl px-6 py-12">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {FEATURES.map((f) => (
+              <div key={f.title} className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-5">
+                <div className="font-medium">{f.title}</div>
+                <div className="mt-2 text-sm text-zinc-400">{f.body}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-5xl px-6 py-12">
+          <h2 className="text-2xl font-semibold">Plans</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-4">
+            {PLANS.map((p) => (
+              <div key={p.name} className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-5">
+                <div className="font-semibold">{p.name}</div>
+                <div className="mt-1 text-2xl font-bold">{p.price}</div>
+                <div className="mt-1 text-sm text-zinc-400">{p.tokens}</div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-sm text-zinc-400">
+            Pay-as-you-go from €5 to €100 at €0.00016 per token.{" "}
+            <Link href="/pricing" className="text-blue-400 hover:underline">See full details</Link>
+          </p>
+        </section>
+      </main>
+
+      <footer className="border-t border-zinc-800 px-6 py-8 text-sm text-zinc-500">
+        <div className="mx-auto max-w-5xl space-y-2">
+          <p>
+            {siteConfig.companyName} · Org. no. {siteConfig.organizationNumber} · {siteConfig.taxCountry}
+          </p>
+          <p>
+            Support:{" "}
+            <a className="text-blue-400 hover:underline" href={siteConfig.supportWhatsAppUrl}>
+              WhatsApp
+            </a>{" "}
+            ({siteConfig.supportHours}) · {siteConfig.supportEmail}
+          </p>
+          <p>© {new Date().getFullYear()} {siteConfig.companyName}. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
